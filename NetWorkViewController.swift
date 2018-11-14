@@ -16,11 +16,15 @@ import SnapKit
 import SwiftyJSON
 import Alamofire
 import Moya
+
+@available(iOS 10.0, *)
 class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDataSource{
  
     var tableView : UITableView!
     var channels = Array<DouBanModel>()
     let disposeBag = DisposeBag()
+     let refreshControl = UIRefreshControl()
+    var datas = Array<Language>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +36,8 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
         lable.textColor = #colorLiteral(red: 0.4392156899, green: 0.01176470611, blue: 0.1921568662, alpha: 1)
         lable.text = "测试一下位置"
         self.view.addSubview(lable)
-      
+       
+     
         lable.snp.makeConstraints { (make) -> Void in
             make.top.equalTo(10)
             make.width.greaterThanOrEqualTo(60)
@@ -50,8 +55,14 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
             make.top.equalTo(lable.snp.bottom).offset(10)
         }
         
+    self.refreshControl.backgroundColor = #colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)
+        self.refreshControl.attributedTitle = NSAttributedString(string: "刷新一下:\(NSDate())", attributes:[NSAttributedStringKey.foregroundColor:UIColor.white])
+    self.refreshControl.tintColor = UIColor.green
+    self.refreshControl.tintAdjustmentMode = .dimmed
+        self.refreshControl.addTarget(self, action: #selector(refrshData), for: .valueChanged)
+        self.tableView.refreshControl = self.refreshControl
         let DouBanProvider = MoyaProvider<DouBanAPI>(requestClosure: requestTimeoutClosure)
-        
+    
         
         //Moya的普通操作
         //获取频道数据
@@ -60,6 +71,12 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
                 
             case let .success(response):
                 let  str =  String(data: response.data, encoding: String.Encoding.utf8)
+                
+                let jsonString = try? JSONSerialization.jsonObject(with: response.data, options: .mutableContainers)
+                print(jsonString as Any)
+            
+            
+                print(self.datas)
                 let channels = Channels.deserialize(from: str)
                 let arr = channels?.channels
                 self.channels = arr!
@@ -120,14 +137,13 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
 //            }
 //        }.disposed(by: disposeBag)
 //
-//
+
         
         
         //RXswift 和moya封装 将网络请求封装
         
 //        let service = DouBanNetworkService()
 //        service.channelsubject.subscribe(onNext: { (event) in
-//
 //            self.channels = event
 //            DispatchQueue.main.async {
 //              self.tableView .reloadData()
@@ -139,13 +155,7 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
 //        }).disposed(by: disposeBag)
 //        service .loadChannels()
         
-        
-    
-        
-
-
-        
-        
+//      self.refreshControl .beginRefreshing()
         
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -161,6 +171,14 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
         cell.textLabel?.text = model.name
         return cell
         
+    }
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentOffset.y < 0 {
+            print("上拉");
+        }else{
+            
+            print("下滑");
+        }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView .deselectRow(at: indexPath, animated: true)
@@ -178,8 +196,14 @@ class NetWorkViewController: UIViewController ,UITableViewDelegate,UITableViewDa
             
         }).disposed(by: disposeBag)
         
-        
+           UIApplication.shared.openURL(URL.init(string:"https://www.baidu.com")!)
     }
     
+    @objc func refrshData()  {
+//        self.tableView.refreshControl?.endRefreshing();
+//
+//        print("下啦")
+    }
 
+  
 }

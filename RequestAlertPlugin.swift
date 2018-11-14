@@ -10,7 +10,7 @@ import UIKit
 import Moya
 import Result
 final  class RequestAlertPlugin: PluginType {
-
+     //moya插件勒
     private let viewController: UIViewController
     private var spinner: UIActivityIndicatorView!
     
