@@ -25,6 +25,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/kongmingyang/RXMoyaDemo.git", :tag => s.version }
   s.source_files  = "NetWorkViewController/NetWorkViewController/*.{swift}"
   s.requires_arc = true 
+  s.platform = :ios 
+  s.framework = 'UIKit'
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
   #   * Try to keep it short, snappy and to the point.
