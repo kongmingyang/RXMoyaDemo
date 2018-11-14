@@ -18,7 +18,13 @@ Pod::Spec.new do |s|
   s.name         = "RXMoyaDemo"
   s.version      = "0.0.1"
   s.summary      = "A short description of RXMoyaDemo."
-
+  s.homepage     = "https://github.com/kongmingyang/RXMoyaDemo"
+  s.license              = { :type => "MIT", :file => "LICENSE" }
+  s.author             = { "kongmingyang" => "310155154@qq.com" }
+  s.social_media_url   = "https://blog.csdn.net/ForeverMyheart"
+  s.source       = { :git => "https://github.com/kongmingyang/RXMoyaDemo.git", :tag => s.version }
+  s.source_files  = "NetWorkViewController/NetWorkViewController/*.{swift}"
+  s.requires_arc = true 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
   #   * Try to keep it short, snappy and to the point.
